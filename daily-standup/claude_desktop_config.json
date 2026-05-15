@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "standup": {
+      "url": "https://agentid.live/api/mcp/standup-bot",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    }
+  }
+}

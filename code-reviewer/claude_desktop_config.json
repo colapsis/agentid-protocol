@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "code-reviewer": {
+      "url": "https://agentid.live/api/mcp/code-reviewer",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    }
+  }
+}
