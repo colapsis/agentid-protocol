@@ -7,32 +7,29 @@ Two agents share one identity. The researcher gathers information and hands off 
 ## How it works
 
 ```
-Session 1 (@researcher_agent, in Claude Desktop)
-  → write_memory("blog_outline", ...)
-  → write_memory("section_1", ...)
-  → handoff(summary="research done", next_steps=[...], to="writer_agent")
+Session 1: @researcher_agent
+  -> start_mission("Write blog post on MCP patterns")
+  -> write_memory("blog_outline", "Introduction, Pattern 1, Pattern 2...")
+  -> write_memory("section_1", "MCP tools are...")
+  -> handoff(to="writer_agent", context="Keys: blog_outline, section_1, ...")
 
-Session 2 (@writer_agent, in Cursor or a new Claude window)
-  → read_mission()        ← automatically sees the handoff
-  → read_memory(...)      ← reads what researcher saved
-  → writes the blog post  ← no repeated research
+Session 2: @writer_agent (separate window or tool)
+  -> read_mission()       # sees the handoff automatically
+  -> read_memory(...)     # reads each key the researcher saved
+  -> writes the final post without re-doing any research
 ```
 
-The key: both agents are connected to the **same persona**. They share memory, share mission state, and can hand off work through a structured note that persists until the next agent picks it up.
+Both agents connect to the **same persona**. They share memory, mission state, and handoff notes. When one writes, the other reads.
 
 ## Setup
 
 ### 1. Create two agents
 
 Go to [agentid.live/app/agents](https://agentid.live/app/agents) and create:
-- `researcher_agent` — attach it to a persona (e.g. "dev-blog")
-- `writer_agent` — attach it to the **same persona**
-
-Both agents will now share memory and mission state.
+- `researcher_agent` — attached to a persona (e.g. "dev-blog")
+- `writer_agent` — attached to **the same persona**
 
 ### 2. Add to Claude Desktop
-
-Copy `claude_desktop_config.json` into your Claude Desktop config (usually `~/Library/Application Support/Claude/claude_desktop_config.json` on Mac):
 
 ```json
 {
@@ -49,23 +46,19 @@ Copy `claude_desktop_config.json` into your Claude Desktop config (usually `~/Li
 }
 ```
 
-Replace `YOUR_API_KEY` with your key from [agentid.live/app/developers](https://agentid.live/app/developers).
-
 ### 3. Run it
 
-**Session 1 — open Claude Desktop, select the `researcher` MCP server, and say:**
+**Session 1** — select `researcher`, then:
 
-> "Research [your topic]. Write your findings to memory section by section. When done, hand off to @writer_agent with a summary and the memory keys you used."
+> "Research [your topic]. Write findings to memory section by section. When done, hand off to @writer_agent."
 
-**Session 2 — open a new Claude window (or Cursor), select the `writer` MCP server, and say:**
+**Session 2** — open a new Claude window, select `writer`, then:
 
 > "Check for any handoffs and complete the task."
 
-The writer will automatically see the handoff and pick up from the researcher's notes.
+The writer sees the handoff and takes it from there.
 
 ## Python demo
-
-See `demo.py` for a Python version that drives both agents programmatically.
 
 ```bash
 pip install anthropic mcp
@@ -73,6 +66,8 @@ export AGENTID_API_KEY=ak_live_...
 python demo.py
 ```
 
+The demo runs both sessions sequentially in one script. You'll see the researcher save memory keys, then the writer read them and produce the final output.
+
 ## What you'll see
 
-After running both sessions, open [agentid.live/app/studio](https://agentid.live/app/studio) to see the full activity feed — both agents' tool calls, the handoff event, and the completed output.
+After both sessions, open [agentid.live/app/studio](https://agentid.live/app/studio) to see the full activity feed — both agents' tool calls, the handoff event, and the completed output in one timeline.

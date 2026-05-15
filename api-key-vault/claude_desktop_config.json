@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "analyst": {
+      "url": "https://agentid.live/api/mcp/data-analyst",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    }
+  }
+}

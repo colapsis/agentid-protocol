@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "pm": {
+      "url": "https://agentid.live/api/mcp/pm-agent",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    },
+    "engineer": {
+      "url": "https://agentid.live/api/mcp/engineer-agent",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    },
+    "summary": {
+      "url": "https://agentid.live/api/mcp/summary-agent",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    }
+  }
+}

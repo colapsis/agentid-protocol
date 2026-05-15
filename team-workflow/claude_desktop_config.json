@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "alice": {
+      "url": "https://agentid.live/api/mcp/alice",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    },
+    "bob": {
+      "url": "https://agentid.live/api/mcp/bob",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "researcher": {
+      "url": "https://agentid.live/api/mcp/researcher",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    },
+    "analyst": {
+      "url": "https://agentid.live/api/mcp/analyst",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    },
+    "writer": {
+      "url": "https://agentid.live/api/mcp/writer",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    }
+  }
+}

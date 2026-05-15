@@ -10,81 +10,19 @@ Usage:
     python demo.py
 """
 
-import os
+import sys
 import asyncio
 from datetime import date
-import anthropic
-from mcp import ClientSession
-from mcp.client.sse import sse_client
 
-API_KEY = os.environ["AGENTID_API_KEY"]
-BASE_URL = "https://agentid.live/api/mcp"
+sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.dirname(__file__)))
+
+from shared.agent_runner import run_agent
+
 TODAY = date.today().isoformat()
-
-client = anthropic.Anthropic()
-
-
-async def run_agent(handle: str, system: str, user_message: str, max_tokens: int = 2048) -> str:
-    url = f"{BASE_URL}/{handle}"
-    headers = {"Authorization": f"Bearer {API_KEY}"}
-
-    async with sse_client(url, headers=headers) as (read, write):
-        async with ClientSession(read, write) as session:
-            await session.initialize()
-
-            tools_result = await session.list_tools()
-            tools = [
-                {
-                    "name": t.name,
-                    "description": t.description or "",
-                    "input_schema": t.inputSchema,
-                }
-                for t in tools_result.tools
-            ]
-
-            messages = [{"role": "user", "content": user_message}]
-            final_text = ""
-
-            while True:
-                response = client.messages.create(
-                    model="claude-sonnet-4-6",
-                    max_tokens=max_tokens,
-                    system=system,
-                    tools=tools,
-                    messages=messages,
-                )
-
-                for block in response.content:
-                    if hasattr(block, "text"):
-                        final_text = block.text
-                        print(block.text)
-
-                if response.stop_reason == "end_turn":
-                    break
-
-                tool_results = []
-                for block in response.content:
-                    if block.type == "tool_use":
-                        print(f"  → {block.name}({list(block.input.keys())})")
-                        result = await session.call_tool(block.name, block.input)
-                        content = result.content[0].text if result.content else ""
-                        tool_results.append({
-                            "type": "tool_result",
-                            "tool_use_id": block.id,
-                            "content": content,
-                        })
-
-                if not tool_results:
-                    break
-
-                messages.append({"role": "assistant", "content": response.content})
-                messages.append({"role": "user", "content": tool_results})
-
-            return final_text
 
 
 async def log_work(update: str) -> str:
-    print(f"\n=== Logging work update ===\n")
+    print("\n=== Logging work update ===\n")
     return await run_agent(
         handle="standup_bot",
         system=(
@@ -94,6 +32,7 @@ async def log_work(update: str) -> str:
             f"'{TODAY}_blockers'). Confirm what you saved. Be brief."
         ),
         user_message=update,
+        max_tokens=1024,
     )
 
 
@@ -127,8 +66,11 @@ async def main():
     elif action == "2":
         await generate_standup()
     else:
-        print("Logging a sample update and generating a standup...\n")
-        await log_work("Finished the auth refactor, opened PR #42. Reviewed Alice's migration. Still waiting on design review from Bob.")
+        print("Running demo: logging a sample update then generating a standup...\n")
+        await log_work(
+            "Finished the auth refactor, opened PR #42. "
+            "Reviewed Alice's migration. Still waiting on design review from Bob."
+        )
         await generate_standup()
 
     print("\n=== Done ===")

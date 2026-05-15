@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "assistant": {
+      "url": "https://agentid.live/api/mcp/personal-assistant",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    }
+  }
+}

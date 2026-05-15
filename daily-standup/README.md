@@ -1,31 +1,28 @@
-# Daily Standup Agent
+# Daily Standup
 
-An agent that tracks what you're working on and generates your standup each morning. Tell it what you did. Ask it what to report. It remembers everything.
+Log work as you go. Generate your standup in the morning. The agent remembers everything across sessions.
 
 ## How it works
 
 ```
-End of day (or throughout the day)
-  → write_memory("2025-01-15_work", "Finished auth refactor, opened PR #42...")
-  → write_memory("2025-01-15_blockers", "Waiting on design review for settings page")
+Throughout the day
+  -> write_memory("2026-05-16_work", "Finished auth refactor, opened PR #42")
+  -> write_memory("2026-05-16_blockers", "Waiting on design review from Bob")
 
 Next morning
-  → search_memory("2025-01-15")   ← finds yesterday's notes
-  → generates standup: yesterday / today / blockers
+  -> search_memory("2026-05-16")   # finds yesterday's notes
+  -> formats standup: yesterday / today / blockers
 ```
 
-One agent, persistent across every session. Your standup is always based on what you actually did — not what you can remember at 9am.
+One agent, persistent. Your standup is based on what you actually did — not what you can remember at 9am.
 
 ## Setup
 
 ### 1. Create the agent
 
-Go to [agentid.live/app/agents](https://agentid.live/app/agents) and create:
-- `standup-bot` — attach it to a persona (e.g. "my-work")
+Go to [agentid.live/app/agents](https://agentid.live/app/agents) and create `standup-bot`, attached to a persona (e.g. "my-work").
 
 ### 2. Add to Claude Desktop
-
-Copy `claude_desktop_config.json` into your Claude Desktop config:
 
 ```json
 {
@@ -38,15 +35,13 @@ Copy `claude_desktop_config.json` into your Claude Desktop config:
 }
 ```
 
-Replace `YOUR_API_KEY` with your key from [agentid.live/app/developers](https://agentid.live/app/developers).
+Get your key at [agentid.live/app/developers](https://agentid.live/app/developers).
 
 ### 3. Log work as you go
 
-**In Claude Desktop, select the `standup` MCP server and say:**
+Select the `standup` server in Claude Desktop and tell it what you did:
 
 > "I just finished the auth refactor and opened PR #42. Still waiting on design review for the settings page."
-
-The agent saves this to memory with today's date.
 
 Do this whenever you finish something, hit a blocker, or switch context.
 
@@ -56,9 +51,7 @@ Next morning:
 
 > "Generate my standup for today."
 
-The agent searches memory for recent activity, formats a standup, and optionally copies it to your clipboard or Slack.
-
-## Standup format
+Output:
 
 ```
 Yesterday:
@@ -67,7 +60,6 @@ Yesterday:
 
 Today:
 - Start on the settings page redesign
-- Unblock the CI pipeline issue
 
 Blockers:
 - Waiting on design review from @bob
@@ -75,13 +67,13 @@ Blockers:
 
 ## Python demo
 
-See `demo.py` for a Python version that logs work and generates standups programmatically.
-
 ```bash
 pip install anthropic mcp
 export AGENTID_API_KEY=ak_live_...
 python demo.py
 ```
+
+Choose option 1 to log work, option 2 to generate a standup, or press Enter to run the full demo with a sample update.
 
 ## What you'll see
 
